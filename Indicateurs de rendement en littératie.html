@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indicateurs de rendement : Dépistages universels 2025-2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            padding: 30px;
+            background: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .control-group {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .control-item {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        label {
+            font-weight: 600;
+            color: #495057;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        select {
+            padding: 12px 20px;
+            border: 2px solid #dee2e6;
+            border-radius: 10px;
+            font-size: 1em;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 200px;
+        }
+
+        select:hover {
+            border-color: #667eea;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 10px;
+            background: #f8f9fa;
+        }
+
+        .legend-color {
+            width: 30px;
+            height: 30px;
+            border-radius: 5px;
+        }
+
+        .legend-text {
+            font-weight: 600;
+        }
+
+        .competences-grid {
+            display: grid;
+            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        }
+
+        .competence-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+
+        .competence-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .competence-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: #212529;
+            text-transform: capitalize;
+        }
+
+        .threshold-bar {
+            height: 40px;
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            margin-bottom: 15px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .threshold-segment {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9em;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .threshold-segment:hover {
+            filter: brightness(1.1);
+        }
+
+        .AD { background: #FF0000; }
+        .ED { background: #FF9900; }
+        .BD { background: #34A853; }
+
+        .threshold-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.9em;
+        }
+
+        .threshold-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+
+        .threshold-detail.AD { border-left-color: #FF0000; }
+        .threshold-detail.ED { border-left-color: #FF9900; }
+        .threshold-detail.BD { border-left-color: #34A853; }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6c757d;
+        }
+
+        .no-data-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .control-group {
+                flex-direction: column;
+            }
+
+            select {
+                min-width: 100%;
+            }
+
+            .competences-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 Littératie</h1>
+            <p class="subtitle">Indicateurs de rendement : Dépistages universels 2025-2026</p>
+        </header>
+
+        <div class="controls">
+            <div class="control-group">
+                <div class="control-item">
+                    <label for="periode">Période de dépistage</label>
+                    <select id="periode">
+                        <option value="automne_2025">Automne 2025</option>
+                        <option value="hiver_2026" selected>Hiver 2026</option>
+                        <option value="printemps_2026">Printemps 2026</option>
+                    </select>
+                </div>
+                <div class="control-item">
+                    <label for="niveau">Niveau scolaire</label>
+                    <select id="niveau">
+                        <option value="maternelle">Maternelle</option>
+                        <option value="1e" selected>1ère année</option>
+                        <option value="2e">2e année</option>
+                        <option value="3e">3e année</option>
+                        <option value="4e">4e année</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="content">
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color AD"></div>
+                    <div class="legend-text">À Développer (AD)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color ED"></div>
+                    <div class="legend-text">En Développement (ED)</div>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color BD"></div>
+                    <div class="legend-text">Bien Développé (BD)</div>
+                </div>
+            </div>
+
+            <div id="competences-container" class="competences-grid"></div>
+        </div>
+    </div>
+
+    <script>
+        const data = {
+  "definitions": {
+    "AD": "À Développer",
+    "ED": "En Développement",
+    "BD": "Bien Développé"
+  },
+
+  "automne_2025": {
+    "maternelle": {
+      "Conscience phonologique": {
+        "mode": "scale_35",
+        "seuils": [[0,5,"AD"],[6,14,"ED"],[15,35,"BD"]]
+      },
+      "Graphèmes": [[0,0,"AD"],[1,23,"ED"],[24,54,"BD"]],
+      "Phonèmes": [[0,0,"AD"],[1,23,"ED"],[24,54,"BD"]]
+    },
+
+    "1e": {
+      "Conscience phonologique": [[0,11,"AD"],[12,21,"ED"],[22,30,"BD"]],
+      "Graphèmes": [[0,39,"AD"],[40,51,"ED"],[52,54,"BD"]],
+      "Phonèmes": [[0,39,"AD"],[40,51,"ED"],[52,54,"BD"]],
+      "Sons complexes": [[0,3,"AD"],[4,10,"ED"],[11,30,"BD"]],
+      "Sons des mots": [[0,13,"AD"],[14,24,"ED"],[25,35,"BD"]],
+      "Connaissances orthographiques": [[0,0,"AD"],[1,5,"ED"],[6,20,"BD"]],
+      "Niveau de lecture": [[0,1,"AD"],[2,2,"ED"],[3,30,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "2e": {
+      "Sons complexes": [[0,9,"AD"],[10,15,"ED"],[16,32,"BD"]],
+      "Sons des mots": [[0,25,"AD"],[26,33,"ED"],[34,35,"BD"]],
+      "Connaissances orthographiques": [[0,4,"AD"],[5,11,"ED"],[12,25,"BD"]],
+      "Niveau de lecture": [[0,8,"AD"],[9,11,"ED"],[12,30,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "3e": {
+      "Sons complexes": [[0,22,"AD"],[23,27,"ED"],[28,32,"BD"]],
+      "Connaissances orthographiques": [[0,7,"AD"],[8,13,"ED"],[14,20,"BD"]],
+      "Niveau de lecture": [[0,15,"AD"],[16,20,"ED"],[21,30,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "4e": {
+      "Connaissances orthographiques": [[0,15,"AD"],[16,23,"ED"],[24,31,"BD"]],
+      "Niveau de lecture": [[1,1,"AD"],[2,2,"ED"],[3,3,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    }
+  },
+
+  "hiver_2026": {
+    "maternelle": {
+      "Conscience phonologique": {
+        "mode": "scale_35",
+        "seuils": [[0,12,"AD"],[13,22,"ED"],[23,35,"BD"]]
+      },
+      "Graphèmes": [[0,15,"AD"],[16,28,"ED"],[29,54,"BD"]],
+      "Phonèmes": [[0,5,"AD"],[6,28,"ED"],[29,54,"BD"]],
+      "Sons des mots": [[0,5,"AD"],[6,9,"ED"],[10,20,"BD"]]
+    },
+
+    "1e": {
+      "Conscience phonologique": [[0,17,"AD"],[18,25,"ED"],[26,30,"BD"]],
+      "Graphèmes": [[0,49,"AD"],[50,53,"ED"],[54,54,"BD"]],
+      "Phonèmes": [[0,49,"AD"],[50,53,"ED"],[54,54,"BD"]],
+      "Sons complexes": [[0,10,"AD"],[11,18,"ED"],[19,30,"BD"]],
+      "Sons des mots": [[0,18,"AD"],[19,30,"ED"],[31,35,"BD"]],
+      "Connaissances orthographiques": [[0,5,"AD"],[6,13,"ED"],[14,20,"BD"]],
+      "Niveau de lecture": [[0,4,"AD"],[5,6,"ED"],[7,30,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "2e": {
+      "Sons complexes": [[0,17,"AD"],[18,24,"ED"],[25,32,"BD"]],
+      "Sons des mots": [[0,29,"AD"],[30,34,"ED"],[35,35,"BD"]],
+      "Connaissances orthographiques": [[0,9,"AD"],[10,16,"ED"],[17,25,"BD"]],
+      "Niveau de lecture": [[0,12,"AD"],[13,15,"ED"],[16,30,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "3e": {
+      "Sons complexes": [[0,31,"AD"],[32,32,"BD"]],
+      "Connaissances orthographiques": [[0,9,"AD"],[10,15,"ED"],[16,20,"BD"]],
+      "Niveau de lecture": [[0,19,"AD"],[20,24,"ED"],[25,30,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "4e": {
+      "Connaissances orthographiques": [[0,17,"AD"],[18,25,"ED"],[26,31,"BD"]],
+      "Niveau de lecture": [[1,1,"AD"],[2,2,"ED"],[3,3,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    }
+  },
+
+  "printemps_2026": {
+    "maternelle": {
+      "Conscience phonologique": {
+        "mode": "scale_35",
+        "seuils": [[0,20,"AD"],[21,29,"ED"],[30,35,"BD"]]
+      },
+      "Graphèmes": [[0,39,"AD"],[40,51,"ED"],[52,54,"BD"]],
+      "Phonèmes": [[0,39,"AD"],[40,51,"ED"],[52,54,"BD"]],
+      "Sons des mots": [[0,8,"AD"],[9,14,"ED"],[15,20,"BD"]],
+      "Niveau de lecture": [[0,0,"AD"],[1,1,"ED"],[2,12,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "1e": {
+      "Conscience phonologique": [[0,21,"AD"],[22,28,"ED"],[29,30,"BD"]],
+      "Graphèmes": [[0,51,"AD"],[52,53,"ED"],[54,54,"BD"]],
+      "Phonèmes": [[0,51,"AD"],[52,53,"ED"],[54,54,"BD"]],
+      "Sons complexes": [[0,13,"AD"],[14,27,"ED"],[28,30,"BD"]],
+      "Sons des mots": [[0,20,"AD"],[21,32,"ED"],[33,35,"BD"]],
+      "Connaissances orthographiques": [[0,9,"AD"],[10,15,"ED"],[16,20,"BD"]],
+      "Niveau de lecture": [[0,5,"AD"],[6,8,"ED"],[9,30,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "2e": {
+      "Sons complexes": [[0,22,"AD"],[23,27,"ED"],[28,32,"BD"]],
+      "Sons des mots": [[0,29,"AD"],[30,34,"ED"],[35,35,"BD"]],
+      "Connaissances orthographiques": [[0,14,"AD"],[15,21,"ED"],[22,25,"BD"]],
+      "Niveau de lecture": [[0,14,"AD"],[15,17,"ED"],[18,30,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "3e": {
+      "Sons complexes": [[0,31,"AD"],[32,32,"BD"]],
+      "Connaissances orthographiques": [[0,11,"AD"],[12,17,"ED"],[18,20,"BD"]],
+      "Niveau de lecture": [[0,22,"AD"],[23,27,"ED"],[28,30,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    },
+
+    "4e": {
+      "Connaissances orthographiques": [[0,19,"AD"],[20,27,"ED"],[28,31,"BD"]],
+      "Niveau de lecture": [[1,1,"AD"],[2,2,"ED"],[3,3,"BD"]],
+      "Fluidité de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]],
+      "Compréhension de lecture": [[1,2,"AD"],[3,3,"ED"],[4,4,"BD"]]
+    }
+  }
+};
+
+        function formatCompetenceName(name) {
+            return name.replace(/_/g, ' ');
+        }
+
+        function renderCompetences() {
+            const periode = document.getElementById('periode').value;
+            const niveau = document.getElementById('niveau').value;
+            const container = document.getElementById('competences-container');
+            
+            const competences = data[periode][niveau];
+            
+            if (!competences || Object.keys(competences).length === 0) {
+                container.innerHTML = `
+                    <div class="no-data">
+                        <div class="no-data-icon">🔍</div>
+                        <h2>Aucune donnée disponible</h2>
+                        <p>Pas de compétences définies pour cette période et ce niveau.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            container.innerHTML = '';
+            
+            for (const [competence, thresholds] of Object.entries(competences)) {
+                const card = document.createElement('div');
+                card.className = 'competence-card';
+                
+                let thresholdsArray;
+                if (thresholds.mode === 'scale_35') {
+                    thresholdsArray = thresholds.seuils;
+                } else {
+                    thresholdsArray = thresholds;
+                }
+                
+                const maxValue = Math.max(...thresholdsArray.map(t => t[1]));
+                
+                let barHTML = '<div class="threshold-bar">';
+                for (const threshold of thresholdsArray) {
+                    const [min, max, level] = threshold;
+                    const width = ((max - min + 1) / (maxValue + 1)) * 100;
+                    barHTML += `
+                        <div class="threshold-segment ${level}" 
+                             style="width: ${width}%"
+                             title="${min}-${max}: ${level}">
+                            ${level}
+                        </div>
+                    `;
+                }
+                barHTML += '</div>';
+                
+                let detailsHTML = '<div class="threshold-details">';
+                for (const threshold of thresholdsArray) {
+                    const [min, max, level] = threshold;
+                    const levelName = data.definitions[level];
+                    detailsHTML += `
+                        <div class="threshold-detail ${level}">
+                            <span><strong>${levelName}</strong></span>
+                            <span>${min} - ${max} points</span>
+                        </div>
+                    `;
+                }
+                detailsHTML += '</div>';
+                
+                card.innerHTML = `
+                    <div class="competence-title">${formatCompetenceName(competence)}</div>
+                    ${barHTML}
+                    ${detailsHTML}
+                `;
+                
+                container.appendChild(card);
+            }
+        }
+        
+        document.getElementById('periode').addEventListener('change', renderCompetences);
+        document.getElementById('niveau').addEventListener('change', renderCompetences);
+        
+        renderCompetences();
+    </script>
+</body>
+</html>
